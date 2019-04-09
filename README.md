@@ -3,6 +3,7 @@
 This lab aims to build your first WebRTC app.
 
 Choosen to implement Option B + some additional features
+
 Added features:
   - Added face detector for WebRTC
   - Added three new filters: Saturate, Hue-rotate and Contrast
@@ -10,8 +11,10 @@ Added features:
   - Minor design changes
   - Tested with Google Chrome (version: 73.0.3683.86) and Firefox browsers.
 
-Photos:
+Main window:
 ![Window](https://www.part.lt/img/0bc5e7d4e1996c33646fb93c0e7d55a3270.png)
+
+Filter selections:
 ![Filters](https://www.part.lt/img/639c42ee4ded51b62a6b7420e98103fb628.png)
 
 There are many open source alternatives to build a simple communication application like Skype. One of the web based solution is WebRTC. You can try a huge set of examples: 
