@@ -12,19 +12,19 @@
     <meta charset="utf-8">
     <meta name="description" content="WebRTC code samples">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
-    <meta itemprop="description" content="Client-side WebRTC code samples">
-    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
-    <meta itemprop="name" content="WebRTC code samples">
     <meta name="mobile-web-app-capable" content="yes">
     <meta id="theme-color" name="theme-color" content="#ffffff">
 
     <base target="_blank">
 
-    <title>getUserMedia + CSS filters</title>
+    <title>LD 5 PP, EKSf-15</title>
 
-    <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
+    <script src="./build/tracking-min.js"></script>
+    <script src="./build/data/face-min.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="js/main.js" async></script>
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../../css/main.css">
+    <link rel="stylesheet" href="./css/main.css">
 
     <style>
         .none {
@@ -51,14 +51,27 @@
             -webkit-filter: sepia(1);
             filter: sepia(1);
         }
-
-        button#snapshot {
+        .saturate {
+            -webkit-filter: saturate(5);
+            filter: saturate(5);
+        }
+        .huerotate {
+            -webkit-filter: hue-rotate(180deg);
+            filter: hue-rotate(180deg);
+        }
+        .contrast {
+            -webkit-filter: contrast(160%);
+            filter: contrast(160%);
+        }
+        button #snapshot {
             margin: 0 10px 25px 0;
             width: 110px;
         }
 
-        video {
-            object-fit: cover;
+        video, canvas {
+          margin-left: 230px;
+          margin-top: 120px;
+          position: absolute;
         }
     </style>
 
@@ -66,11 +79,9 @@
 
 <body>
 <div id="container">
-
-    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>getUserMedia + CSS filters</span>
-    </h1>
-
-    <video playsinline autoplay></video>
+    <video id="video" width="480" height="360" preload autoplay loop muted></video>
+    <canvas id="canvas" width="480" height="360"></canvas>
+    <div id="container" class="textWrapper">
 
     <label for="filter">Filter: </label>
     <select id="filter">
@@ -79,24 +90,47 @@
         <option value="grayscale">Grayscale</option>
         <option value="invert">Invert</option>
         <option value="sepia">Sepia</option>
+        <option value="saturate">Saturate</option>
+        <option value="huerotate">Hue-rotate</option>
+        <option value="contrast">Contrast</option>
     </select>
 
     <button id="snapshot">Take snapshot</button>
 
-    <canvas></canvas>
-
-    <p>Draw a frame from the getUserMedia video stream onto the canvas element, then apply CSS filters.</p>
-
-    <p>The variables <code>canvas</code>, <code>video</code> and <code>stream</code> are in global scope, so you can
-        inspect them from the console.</p>
+    <canvas id="snap" style="margin-top: 500px !important; margin-left: -40px !important;"></canvas>
 
     <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/filter"
-       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
+       title="WebRTC on GitHub" id="viewSource">WebRTC on GitHub</a>
 </div>
 
-<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-<script src="js/main.js" async></script>
+<script>
+    window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
 
-<script src="../../../js/lib/ga.js"></script>
+      var tracker = new tracking.ObjectTracker('face');
+      tracker.setInitialScale(4);
+      tracker.setStepSize(2);
+      tracker.setEdgesDensity(0.1);
+
+      tracking.track('#video', tracker, { camera: true });
+
+      tracker.on('track', function(event) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        event.data.forEach(function(rect) {
+          context.strokeStyle = '#a64ceb';
+          context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          context.font = '11px Helvetica';
+          context.fillStyle = "#fff";
+          context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+          context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+        });
+      });
+
+    };
+</script>
+
 </body>
 </html>

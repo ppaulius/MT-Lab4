@@ -13,7 +13,7 @@ const filterSelect = document.querySelector('select#filter');
 
 // Put variables in global scope to make them available to the browser console.
 const video = window.video = document.querySelector('video');
-const canvas = window.canvas = document.querySelector('canvas');
+const canvas = window.canvas = document.querySelector('#snap');
 canvas.width = 480;
 canvas.height = 360;
 
